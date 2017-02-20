@@ -1,0 +1,36 @@
+package netcracker.intensive.rover.command;
+
+import netcracker.intensive.rover.Point;
+import netcracker.intensive.rover.constants.Direction;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
+public class LandCommandTest extends AbstractCommandTest {
+
+    private final static Point POSITION = new Point(1, 1); // was Point(2, 2) but that's OOB because Ground is GROUND_2x2: [(0, 0)(1, 1)]
+    private final static Direction DIRECTION = Direction.EAST;
+
+    @Before
+    public void setUp() {
+        super.setUp();
+        testedInstance = new LandCommand(rover, POSITION, DIRECTION);
+    }
+
+    @Override
+    protected String expectedToString() {
+        return "Land at (1, 1) heading EAST"; // was "Land at (2, 2)..." : see comment above
+    }
+
+    @Test
+    public void testExecute() {
+        testedInstance.execute();
+
+        verify(rover, times(1)).land(eq(POSITION), eq(DIRECTION));
+    }
+
+}
